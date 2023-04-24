@@ -4,26 +4,41 @@
  */
 package com.iasoftware.wikideas.models;
 
-/**
- *
- * @author Quiero Ser Digital
- */
-public class Articulo {
-   private int articuloID;
-   private String titulo;
-   private String contenido;
+import jakarta.persistence.*;
 
-    public Articulo(int articuloID, String titulo, String contenido) {
+
+/**
+ * @author Tatiana Ramírez
+ */
+
+@Entity
+@Table(name = "articulo")
+public class Articulo {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long articuloID;
+
+    private String titulo;
+
+    private String contenido;
+
+    @OneToOne(mappedBy = "articulo")
+    private Publicacion publicacion;
+
+    public Articulo() {
+    }
+
+    public Articulo(Long articuloID, String titulo, String contenido) {
         this.articuloID = articuloID;
         this.titulo = titulo;
         this.contenido = contenido;
     }
 
-    public int getArticuloID() {
+    public long getArticuloID() {
         return articuloID;
     }
 
-    public void setArticuloID(int articuloID) {
+    public void setArticuloID(long articuloID) {
         this.articuloID = articuloID;
     }
 
@@ -47,9 +62,6 @@ public class Articulo {
     public String toString() {
         return "Articulo{" + "articuloID=" + articuloID + ", titulo=" + titulo + ", contenido=" + contenido + '}';
     }
-   
-   
-   
-   
-    
+
+
 }

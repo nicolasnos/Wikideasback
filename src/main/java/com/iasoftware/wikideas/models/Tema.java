@@ -4,24 +4,35 @@
  */
 package com.iasoftware.wikideas.models;
 
-/**
- *
- * @author Quiero Ser Digital
- */
-public class Tema {
- private int temaID;
- private String nombre;
+import jakarta.persistence.*;
 
-    public Tema(int temaID, String nombre) {
+
+/**
+ * @author Tatiana Martínez
+ */
+
+@Entity
+public class Tema {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long temaID;
+
+    private String nombre;
+
+
+    public Tema(Long temaID, String nombre) {
         this.temaID = temaID;
         this.nombre = nombre;
     }
 
-    public int getTemaID() {
+    public Tema() {
+    }
+
+    public Long getTemaID() {
         return temaID;
     }
 
-    public void setTemaID(int temaID) {
+    public void setTemaID(Long temaID) {
         this.temaID = temaID;
     }
 
@@ -37,5 +48,5 @@ public class Tema {
     public String toString() {
         return "Tema{" + "temaID=" + temaID + ", nombre=" + nombre + '}';
     }
- 
+
 }

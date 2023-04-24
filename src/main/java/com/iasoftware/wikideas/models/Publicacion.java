@@ -4,63 +4,78 @@
  */
 package com.iasoftware.wikideas.models;
 
-import java.sql.Time;
-import java.util.Date;
+import jakarta.persistence.*;
+
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+
+import java.util.List;
 
 /**
- *
- * @author Quiero Ser Digital
+ * @author Tatiana Martínez
  */
+
+@Entity
+@Table(name = "publicacion")
 public class Publicacion {
-   private int publicacionID;
-   private Date FechaPublicacion;
-   private int temaID;
-   private int articuloID;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long publicacionID;
 
-    public Publicacion(int publicacionID, Date FechaPublicacion, int temaID, int articuloID) {
-        this.publicacionID = publicacionID;
-        this.FechaPublicacion = FechaPublicacion;
-        this.temaID = temaID;
-        this.articuloID = articuloID;
-    }
+    private LocalDate fechaPublicacion;
 
-    public int getPublicacionID() {
+    @OneToOne
+    @JoinColumn(name = "articulo_id")
+    private Articulo articulo;
+
+    @ManyToMany
+    private List<Tema> temas = new ArrayList<>();
+
+    public Long getPublicacionID() {
         return publicacionID;
     }
 
-    public void setPublicacionID(int publicacionID) {
+    public void setPublicacionID(Long publicacionID) {
         this.publicacionID = publicacionID;
     }
 
-    public Date getFechaPublicacion() {
-        return FechaPublicacion;
+    public LocalDate getFechaPublicacion() {
+        return fechaPublicacion;
     }
 
-    public void setFechaPublicacion(Date FechaPublicacion) {
-        this.FechaPublicacion = FechaPublicacion;
+    public void setFechaPublicacion(LocalDate fechaPublicacion) {
+        this.fechaPublicacion = fechaPublicacion;
     }
 
-    public int getTemaID() {
-        return temaID;
+    public Articulo getArticulo() {
+        return articulo;
     }
 
-    public void setTemaID(int temaID) {
-        this.temaID = temaID;
+    public void setArticulo(Articulo articulo) {
+        this.articulo = articulo;
     }
 
-    public int getArticuloID() {
-        return articuloID;
+    public List<Tema> getTemas() {
+        return temas;
     }
 
-    public void setArticuloID(int articuloID) {
-        this.articuloID = articuloID;
+    public void setTemas(List<Tema> temas) {
+        this.temas = temas;
+    }
+
+    public Publicacion() {
     }
 
     @Override
     public String toString() {
-        return "Publicacion{" + "publicacionID=" + publicacionID + ", FechaPublicacion=" + FechaPublicacion + ", temaID=" + temaID + ", articuloID=" + articuloID + '}';
+        return "Publicacion{" +
+                "publicacionID=" + publicacionID +
+                ", fechaPublicacion=" + fechaPublicacion +
+                ", articulo=" + articulo +
+                ", temas=" + temas +
+                '}';
     }
-   
 }
 
 
