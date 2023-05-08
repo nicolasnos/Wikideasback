@@ -1,10 +1,12 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
+
 package com.iasoftware.wikideas.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+
+import java.util.HashSet;
+import java.util.Set;
 
 
 /**
@@ -12,21 +14,22 @@ import jakarta.persistence.*;
  */
 
 @Entity
+@Table(name = "tema")
 public class Tema {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "temaID")
     private Long temaID;
 
+    @NotNull
     private String nombre;
-
-
-    public Tema(Long temaID, String nombre) {
-        this.temaID = temaID;
-        this.nombre = nombre;
-    }
+    @JsonBackReference // <- esto evita problemas de recursividad y serialización. Si esto no se agrega vamos a corromper los datos de las tablas y a crear registros infinitos
+    @ManyToMany(mappedBy = "temas")
+    private Set<Articulo> articulos = new HashSet<>();
 
     public Tema() {
     }
+
 
     public Long getTemaID() {
         return temaID;
@@ -42,6 +45,14 @@ public class Tema {
 
     public void setNombre(String nombre) {
         this.nombre = nombre;
+    }
+
+    public Set<Articulo> getArticulos() {
+        return articulos;
+    }
+
+    public void setArticulos(Set<Articulo> articulos) {
+        this.articulos = articulos;
     }
 
     @Override

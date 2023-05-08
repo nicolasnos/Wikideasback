@@ -1,14 +1,15 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.iasoftware.wikideas.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
+
+import java.util.HashSet;
+
+import java.util.Set;
 
 
 /**
- * @author Tatiana Ramírez
+ * @author Tatiana Martínez
  */
 
 @Entity
@@ -18,27 +19,28 @@ public class Articulo {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long articuloID;
 
+    @Column(name = "titulo")
     private String titulo;
 
+    @Column(name = "contenido")
     private String contenido;
 
-    @OneToOne(mappedBy = "articulo")
-    private Publicacion publicacion;
+    @JsonBackReference // <- esto evita problemas de recursividad y serialización. Si esto no se agrega vamos a corromper los datos de las tablas y a crear registros infinitos
+    @ManyToMany
+    @JoinTable(name = "publicacion",
+            joinColumns = @JoinColumn(name = "articulo_id", referencedColumnName = "articuloID"),
+            inverseJoinColumns = @JoinColumn(name = "tema_id", referencedColumnName = "temaID"))
+    private Set<Tema> temas = new HashSet<>();
+
 
     public Articulo() {
     }
 
-    public Articulo(Long articuloID, String titulo, String contenido) {
-        this.articuloID = articuloID;
-        this.titulo = titulo;
-        this.contenido = contenido;
-    }
-
-    public long getArticuloID() {
+    public Long getArticuloID() {
         return articuloID;
     }
 
-    public void setArticuloID(long articuloID) {
+    public void setArticuloID(Long articuloID) {
         this.articuloID = articuloID;
     }
 
@@ -56,6 +58,14 @@ public class Articulo {
 
     public void setContenido(String contenido) {
         this.contenido = contenido;
+    }
+
+    public Set<Tema> getTemas() {
+        return temas;
+    }
+
+    public void setTemas(Set<Tema> temas) {
+        this.temas = temas;
     }
 
     @Override
