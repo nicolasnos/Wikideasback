@@ -1,29 +1,46 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.iasoftware.wikideas.models;
 
-/**
- *
- * @author Quiero Ser Digital
- */
-public class Articulo {
-   private int articuloID;
-   private String titulo;
-   private String contenido;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 
-    public Articulo(int articuloID, String titulo, String contenido) {
-        this.articuloID = articuloID;
-        this.titulo = titulo;
-        this.contenido = contenido;
+import java.util.HashSet;
+
+import java.util.Set;
+
+
+/**
+ * @author Tatiana Martínez
+ */
+
+@Entity
+@Table(name = "articulo")
+public class Articulo {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long articuloID;
+
+    @Column(name = "titulo")
+    private String titulo;
+
+    @Column(name = "contenido")
+    private String contenido;
+
+    @JsonBackReference // <- esto evita problemas de recursividad y serialización. Si esto no se agrega vamos a corromper los datos de las tablas y a crear registros infinitos
+    @ManyToMany
+    @JoinTable(name = "publicacion",
+            joinColumns = @JoinColumn(name = "articulo_id", referencedColumnName = "articuloID"),
+            inverseJoinColumns = @JoinColumn(name = "tema_id", referencedColumnName = "temaID"))
+    private Set<Tema> temas = new HashSet<>();
+
+
+    public Articulo() {
     }
 
-    public int getArticuloID() {
+    public Long getArticuloID() {
         return articuloID;
     }
 
-    public void setArticuloID(int articuloID) {
+    public void setArticuloID(Long articuloID) {
         this.articuloID = articuloID;
     }
 
@@ -43,13 +60,18 @@ public class Articulo {
         this.contenido = contenido;
     }
 
+    public Set<Tema> getTemas() {
+        return temas;
+    }
+
+    public void setTemas(Set<Tema> temas) {
+        this.temas = temas;
+    }
+
     @Override
     public String toString() {
         return "Articulo{" + "articuloID=" + articuloID + ", titulo=" + titulo + ", contenido=" + contenido + '}';
     }
-   
-   
-   
-   
-    
+
+
 }
